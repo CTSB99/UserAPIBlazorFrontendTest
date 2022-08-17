@@ -1,0 +1,45 @@
+﻿@page "/fetchuserdata"
+@using UserAPIBlazorFrontendTest.Data
+@using UserAPIBlazorFrontendTest.Models
+@inject IUserService iUserService;
+
+
+<PageTitle>User Data</PageTitle>
+
+<h1>User Data</h1>
+
+@if( userList == null){
+    <h3>Loading ...</h3>
+} else{
+    @foreach (var User in userList)
+    {
+        <ul>
+            <li>
+                User Id: @User.Id
+            </li>
+            <li>
+                First Name: @User.Firstname
+            </li>
+            <li>
+                Last Name: @User.Lastname
+            </li>
+            <li>
+                User Name @User.Username
+            </li>
+        </ul>
+    }
+}
+
+@code {
+    private List<User> userList = new List<User>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUsers();
+    }
+
+    private async Task GetUsers()
+    {
+        userList = await iUserService.GetUsers();
+    }
+}
