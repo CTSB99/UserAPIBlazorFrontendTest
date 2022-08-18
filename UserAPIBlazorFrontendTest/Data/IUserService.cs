@@ -4,6 +4,7 @@ namespace UserAPIBlazorFrontendTest.Data
 {
     public interface IUserService
     {
-        Task<List<User>> GetUsers();
+        Task<List<User>> GetAllUsers();
+        Task<User> ReadUser(int input);
     }
 }

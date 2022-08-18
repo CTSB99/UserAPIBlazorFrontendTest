@@ -28,18 +28,45 @@
             </li>
         </ul>
     }
+    <label for="IdInput">Input UserId here: </label>
+    <input name="IdInput" @bind="inputId" />
+    <button name="ConfirmButton" @onclick=ReadUser>Confirm</button>
+
+    <ul>
+        <li>
+            User Id: @userToGet.Id
+        </li>
+        <li>
+            First Name: @userToGet.Firstname
+        </li>
+        <li>
+            Last Name: @userToGet.Lastname
+        </li>
+        <li>
+            User Name @userToGet.Username
+        </li>
+    </ul>
 }
 
 @code {
     private List<User> userList = new List<User>();
+    private User userToGet = new User();
+    private int inputId;
 
     protected override async Task OnInitializedAsync()
     {
-        await GetUsers();
+        await GetAllUsers();
+        Console.WriteLine("Here is the user to get: " + userToGet);
     }
 
-    private async Task GetUsers()
+    private async Task GetAllUsers()
     {
-        userList = await iUserService.GetUsers();
+        userList = await iUserService.GetAllUsers();
+    }
+
+    public async Task ReadUser()
+    {
+        userToGet = await iUserService.ReadUser(inputId);
+        Console.WriteLine("Here is the user to get: " + userToGet.Username);
     }
 }
