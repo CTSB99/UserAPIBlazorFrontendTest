@@ -7,56 +7,86 @@
 <PageTitle>User Data</PageTitle>
 
 <h1>User Data</h1>
+<div name="AllUserDiv">
 
-@if( userList == null){
-    <h3>Loading ...</h3>
-} else{
-    @foreach (var User in userList)
-    {
-        <ul>
-            <li>
-                User Id: @User.Id
-            </li>
-            <li>
-                First Name: @User.Firstname
-            </li>
-            <li>
-                Last Name: @User.Lastname
-            </li>
-            <li>
-                User Name @User.Username
-            </li>
-        </ul>
+    <button name="ConfirmButton" @onclick=GetAllUsers>Get Users</button>
+
+    @if( userList == null){
+    } else{
+        @foreach (var User in userList)
+        {
+            <ul>
+                <li>
+                    User Id: @User.Id
+                </li>
+                <li>
+                    First Name: @User.Firstname
+                </li>
+                <li>
+                    Last Name: @User.Lastname
+                </li>
+                <li>
+                    User Name @User.Username
+                </li>
+            </ul>
+        }
     }
+</div>
+
+<div name="SingleUserDiv">
     <label for="IdInput">Input UserId here: </label>
     <input name="IdInput" @bind="inputId" />
     <button name="ConfirmButton" @onclick=ReadUser>Confirm</button>
 
-    <ul>
-        <li>
-            User Id: @userToGet.Id
-        </li>
-        <li>
-            First Name: @userToGet.Firstname
-        </li>
-        <li>
-            Last Name: @userToGet.Lastname
-        </li>
-        <li>
-            User Name @userToGet.Username
-        </li>
-    </ul>
-}
+    @if (userToGet.Id == 0){
+
+    } else {
+        <ul>
+            <li>
+                User Id: @userToGet.Id
+            </li>
+            <li>
+                First Name: @userToGet.Firstname
+            </li>
+            <li>
+                Last Name: @userToGet.Lastname
+            </li>
+            <li>
+                User Name @userToGet.Username
+            </li>
+        </ul>
+    }
+</div>
+
+<div name="NewUserDiv">
+    <form>
+        <label for="firstnameInput">First Name: </label>
+        <input name="firstnameInput" @bind="firstname">
+
+        <label for="lastnameInput">Last Name: </label>
+        <input name="lastnameInput" @bind="lastname">
+
+        <label for="usernameInput">User Name: </label>
+        <input name="usernameInput" @bind="username">
+
+        <label for="passwordInput">Password : </label>
+        <input name="passwordInput" @bind="password">
+    </form>
+</div>
+
+<button name="NewUserButton" @onclick=CreateUser>New User</button>
 
 @code {
     private List<User> userList = new List<User>();
     private User userToGet = new User();
     private int inputId;
+    private string? firstname;
+    private string? lastname;
+    private string? username;
+    private string? password;
 
     protected override async Task OnInitializedAsync()
     {
-        await GetAllUsers();
-        Console.WriteLine("Here is the user to get: " + userToGet);
     }
 
     private async Task GetAllUsers()
@@ -68,5 +98,11 @@
     {
         userToGet = await iUserService.ReadUser(inputId);
         Console.WriteLine("Here is the user to get: " + userToGet.Username);
+    }
+
+    public async void CreateUser()
+    {
+        Console.WriteLine("CreateUser called");
+        await iUserService.CreateUser(firstname!, lastname!, username!, password!);
     }
 }

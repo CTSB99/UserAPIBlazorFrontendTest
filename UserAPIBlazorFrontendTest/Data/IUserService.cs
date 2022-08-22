@@ -6,5 +6,6 @@ namespace UserAPIBlazorFrontendTest.Data
     {
         Task<List<User>> GetAllUsers();
         Task<User> ReadUser(int input);
+        Task CreateUser(string firstname, string lastname, string username, string password);
     }
 }
