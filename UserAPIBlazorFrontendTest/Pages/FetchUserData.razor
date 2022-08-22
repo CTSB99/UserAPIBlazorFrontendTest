@@ -7,73 +7,82 @@
 <PageTitle>User Data</PageTitle>
 
 <h1>User Data</h1>
-<div id="AllUserDiv">
 
-    <button name="ConfirmButton" @onclick=GetAllUsers>Get Users</button>
+@if (userList == null){
+    <h2>Loading ...</h2>
+}else{
 
-    @if( userList == null){
-    } else{
-        @foreach (var User in userList)
+    <div id="AllUserDiv">
+        
+        <button @onclick=ToggleAll>Show/Hide Data</button>
+
+        @if(!toggleAll){
+        } else{
+            @foreach (var User in userList)
+            {
+                <ul>
+                    <li>
+                        User Id: @User.Id
+                    </li>
+                    <li>
+                        First Name: @User.Firstname
+                    </li>
+                    <li>
+                        Last Name: @User.Lastname
+                    </li>
+                    <li>
+                        User Name @User.Username
+                    </li>
+                </ul>
+            }
+        }
+    </div>
+
+    <div id="SingleUserDiv">
+        <label for="IdInput">Input UserId here: </label>
+        <input name="IdInput" @bind="inputId" />
+        <button name="ConfirmButton" @onclick=ReadUser>Confirm</button>
+        <button @onclick=ToggleSingle>Show/Hide Data</button>
+
+
+        @if (!toggleSingle)
         {
+
+        } else {
             <ul>
                 <li>
-                    User Id: @User.Id
+                    User Id: @userToGet.Id
                 </li>
                 <li>
-                    First Name: @User.Firstname
+                    First Name: @userToGet.Firstname
                 </li>
                 <li>
-                    Last Name: @User.Lastname
+                    Last Name: @userToGet.Lastname
                 </li>
                 <li>
-                    User Name @User.Username
+                    User Name @userToGet.Username
                 </li>
             </ul>
         }
-    }
-</div>
+    </div>
 
-<div id="SingleUserDiv">
-    <label for="IdInput">Input UserId here: </label>
-    <input name="IdInput" @bind="inputId" />
-    <button name="ConfirmButton" @onclick=ReadUser>Confirm</button>
+    <div id="NewUserDiv">
+        <form>
+            <label for="firstnameInput">First Name: </label>
+            <input name="firstnameInput" @bind="firstname">
 
-    @if (userToGet.Id == 0){
+            <label for="lastnameInput">Last Name: </label>
+            <input name="lastnameInput" @bind="lastname">
 
-    } else {
-        <ul>
-            <li>
-                User Id: @userToGet.Id
-            </li>
-            <li>
-                First Name: @userToGet.Firstname
-            </li>
-            <li>
-                Last Name: @userToGet.Lastname
-            </li>
-            <li>
-                User Name @userToGet.Username
-            </li>
-        </ul>
-    }
-</div>
+            <label for="usernameInput">User Name: </label>
+            <input name="usernameInput" @bind="username">
 
-<div id="NewUserDiv">
-    <form>
-        <label for="firstnameInput">First Name: </label>
-        <input name="firstnameInput" @bind="firstname">
-
-        <label for="lastnameInput">Last Name: </label>
-        <input name="lastnameInput" @bind="lastname">
-
-        <label for="usernameInput">User Name: </label>
-        <input name="usernameInput" @bind="username">
-
-        <label for="passwordInput">Password : </label>
-        <input name="passwordInput" @bind="password">
-    </form>
-    <button name="NewUserButton" @onclick=CreateUser>Add New User</button>
-</div>
+            <label for="passwordInput">Password : </label>
+            <input name="passwordInput" @bind="password">
+        </form>
+        <button name="NewUserButton" @onclick=CreateUser>Add New User</button>
+    </div>
+}
 
 
 @code {
@@ -84,25 +93,32 @@
     private string? lastname;
     private string? username;
     private string? password;
+    private bool toggleAll = false;
+    private bool toggleSingle = false;
 
     protected override async Task OnInitializedAsync()
     {
+        userList = await iUserService.GetAllUsers();
     }
 
-    private async Task GetAllUsers()
+    private void ToggleAll()
     {
-        userList = await iUserService.GetAllUsers();
+        toggleAll = !toggleAll;
+    }
+
+    private void ToggleSingle()
+    {
+        toggleSingle = !toggleSingle;
     }
 
     public async Task ReadUser()
     {
         userToGet = await iUserService.ReadUser(inputId);
-        Console.WriteLine("Here is the user to get: " + userToGet.Username);
+        toggleSingle = true;
     }
 
     public async void CreateUser()
     {
-        Console.WriteLine("CreateUser called");
         await iUserService.CreateUser(firstname!, lastname!, username!, password!);
     }
 }
