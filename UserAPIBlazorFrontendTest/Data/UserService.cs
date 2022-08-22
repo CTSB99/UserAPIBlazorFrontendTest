@@ -38,5 +38,10 @@ namespace UserAPIBlazorFrontendTest.Data
 
             Console.WriteLine($"\n\n\n\n\n This is the response: {response} \n\n\n\n\n\n");
         }
+
+        public void DeleteUser(int id)
+        {
+            httpClient.DeleteAsync($"https://localhost:7275/api/User/DeleteUser?id={id}");
+        }
     }
 }
