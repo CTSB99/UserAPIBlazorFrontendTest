@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\FetchUserData.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\FetchUserData.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 

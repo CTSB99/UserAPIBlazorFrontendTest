@@ -7,7 +7,7 @@
 <PageTitle>User Data</PageTitle>
 
 <h1>User Data</h1>
-<div name="AllUserDiv">
+<div id="AllUserDiv">
 
     <button name="ConfirmButton" @onclick=GetAllUsers>Get Users</button>
 
@@ -33,7 +33,7 @@
     }
 </div>
 
-<div name="SingleUserDiv">
+<div id="SingleUserDiv">
     <label for="IdInput">Input UserId here: </label>
     <input name="IdInput" @bind="inputId" />
     <button name="ConfirmButton" @onclick=ReadUser>Confirm</button>
@@ -58,7 +58,7 @@
     }
 </div>
 
-<div name="NewUserDiv">
+<div id="NewUserDiv">
     <form>
         <label for="firstnameInput">First Name: </label>
         <input name="firstnameInput" @bind="firstname">
@@ -72,9 +72,9 @@
         <label for="passwordInput">Password : </label>
         <input name="passwordInput" @bind="password">
     </form>
+    <button name="NewUserButton" @onclick=CreateUser>Add New User</button>
 </div>
 
-<button name="NewUserButton" @onclick=CreateUser>New User</button>
 
 @code {
     private List<User> userList = new List<User>();
