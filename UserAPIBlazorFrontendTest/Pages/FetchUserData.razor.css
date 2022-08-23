@@ -1,15 +1,3 @@
-﻿#AllUserDiv{
-    margin: 1rem;
-}
-
-#SingleUserDiv {
-    margin: 1rem;
-}
-
-#NewUserDiv {
-    margin: 1rem;
-}
-
-#DeleteDiv{
+﻿.UserDiv{
     margin: 1rem;
 }

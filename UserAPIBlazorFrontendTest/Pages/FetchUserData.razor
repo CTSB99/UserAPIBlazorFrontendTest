@@ -12,7 +12,7 @@
     <h2>Loading ...</h2>
 }else{
 
-    <div id="AllUserDiv">
+    <div class="UserDiv" id="AllUserDiv">
         <button @onclick=GetAllUsers>Update Data</button>
 
         @foreach (var User in userList)
@@ -34,28 +34,33 @@
         }
     </div>
 
-    <div id="SingleUserDiv">
+    <div class="UserDiv" id="SingleUserDiv">
         <label for="IdInput">Input UserId here: </label>
         <input name="IdInput" @bind="inputId" />
         <button name="ConfirmButton" @onclick=ReadUser>Confirm</button>
 
-        <ul>
-            <li>
-                User Id: @userToGet.Id
-            </li>
-            <li>
-                First Name: @userToGet.Firstname
-            </li>
-            <li>
-                Last Name: @userToGet.Lastname
-            </li>
-            <li>
-                User Name @userToGet.Username
-            </li>
-        </ul>
+        @if(userToGet == null){
+
+        }else{
+            <ul>
+                <li>
+                    User Id: @userToGet.Id
+                </li>
+                <li>
+                    First Name: @userToGet.Firstname
+                </li>
+                <li>
+                    Last Name: @userToGet.Lastname
+                </li>
+                <li>
+                    User Name @userToGet.Username
+                </li>
+            </ul>
+        }
+        
     </div>
 
-    <div id="NewUserDiv">
+    <div class="UserDiv" id="NewUserDiv">
         <form>
             <label for="firstnameInput">First Name: </label>
             <input name="firstnameInput" @bind="firstname">
@@ -72,7 +77,7 @@
         <button name="NewUserButton" @onclick=CreateUser>Add New User</button>
     </div>
 
-    <div id="DeleteDiv">
+    <div class="UserDiv" id="DeleteDiv">
         <label for="DeleteId">Input Id of the User you want to remove here</label>
         <input name="DeleteId" @bind="deleteId" />
         <button name="ConfirmButton" @onclick=DeleteUser>Remove User from Database</button>
@@ -89,10 +94,12 @@
     private string? lastname;
     private string? username;
     private string? password;
+    public User NewUser = new User();
 
     protected override async Task OnInitializedAsync()
     {
         userList = await iUserService.GetAllUsers();
+        userToGet = null;
     }
 
     public async Task GetAllUsers(){
@@ -106,7 +113,12 @@
 
     public async void CreateUser()
     {
-        await iUserService.CreateUser(firstname!, lastname!, username!, password!);
+        NewUser.Firstname = firstname;
+        NewUser.Lastname = lastname;
+        NewUser.Username = username;
+        NewUser.Password = password;
+
+        await iUserService.CreateUser(NewUser);
     }
     public void DeleteUser()
     {
