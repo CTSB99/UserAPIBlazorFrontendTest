@@ -24,20 +24,10 @@ namespace UserAPIBlazorFrontendTest.Data
         {
             try
             {
-                var response = await httpClient.GetFromJsonAsync<User>($"https://localhost:7275/api/User/ReadUser?id={userId}"); //Error is thrown here already
-                Console.WriteLine($"\n\n\n\n\n{response}\n\n\n\n\n");
-                if (response == null)
-                {
-                    Console.WriteLine("\n\n\n\n\n LOLLOLO \n\n\n\n\n");
-                    throw new Exception(message: "User Not Found");
-                }
-
-                return response;
-
+                return await httpClient.GetFromJsonAsync<User>($"https://localhost:7275/api/User/ReadUser?id={userId}"); //Error is thrown here already
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"\n\n\n\n\n ex.Message: {ex.Message}\n\n\n\n\n");
                 return null;
             }
         }
@@ -51,9 +41,11 @@ namespace UserAPIBlazorFrontendTest.Data
             Console.WriteLine($"\n\n\n\n\n This is the response: {response} \n\n\n\n\n\n");
         }
 
-        public void DeleteUser(int id)
+        public async Task<bool> DeleteUser(int id)
         {
-            httpClient.DeleteAsync($"https://localhost:7275/api/User/DeleteUser?id={id}");
+            var response = await httpClient.DeleteAsync($"https://localhost:7275/api/User/DeleteUser?id={id}");
+            Console.WriteLine($"\n\n\n\n\n This is the response: {response.IsSuccessStatusCode} \n\n\n\n\n\n");
+            return response.IsSuccessStatusCode;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace UserAPIBlazorFrontendTest.Data
         Task<List<User>> GetAllUsers();
         Task<User> ReadUser(int input);
         Task CreateUser(User user);
-        void DeleteUser(int id);
+        Task<bool> DeleteUser(int id);
     }
 }

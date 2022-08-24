@@ -1,3 +1,9 @@
 ﻿.UserDiv{
     margin: 1rem;
 }
+.ErrorLabel{
+    background-color: red;
+    border: 0.1rem solid black;
+    margin: 0 1rem;
+    padding: 0 1rem;
+}

@@ -35,8 +35,15 @@
     </div>
 
     <div class="UserDiv" id="SingleUserDiv">
-        <label for="IdInput">Input UserId here: </label>
+        <label class="inputIdLabel" for="IdInput">Input UserId here: </label>
         <input name="IdInput" @bind="inputId" />
+        @if (!toggleRead)
+        {
+        }
+        else
+        {
+            <label class="ErrorLabel" for="IdInput">User was not found</label>
+        }
         <button name="ConfirmButton" @onclick=ReadUser>Confirm</button>
 
         @if(userToGet == null){
@@ -79,8 +86,14 @@
 
     <div class="UserDiv" id="DeleteDiv">
         <label for="DeleteId">Input Id of the User you want to remove here</label>
+        @if(!toggleDelete){
+
+        }else{
+            <label class="ErrorLabel" for="DeleteId">User was not found</label>
+        }
         <input name="DeleteId" @bind="deleteId" />
         <button name="ConfirmButton" @onclick=DeleteUser>Remove User from Database</button>
+        <label for="DeleteId">@deleteFeedback</label>
     </div>
 }
 
@@ -94,6 +107,9 @@
     private string? lastname;
     private string? username;
     private string? password;
+    private string? deleteFeedback;
+    private bool toggleRead = false;
+    private bool toggleDelete = false;
     public User NewUser = new User();
 
     protected override async Task OnInitializedAsync()
@@ -108,7 +124,10 @@
 
     public async Task ReadUser()
     {
+        toggleRead = false;
         userToGet = await iUserService.ReadUser(inputId);
+        if (userToGet == null)
+            HandleReadingError();
     }
 
     public async void CreateUser()
@@ -120,8 +139,23 @@
 
         await iUserService.CreateUser(NewUser);
     }
+
     public void DeleteUser()
     {
-        iUserService.DeleteUser(deleteId);
+        Console.WriteLine($"\n\n\n Start \n\n\n");
+        var success = iUserService.DeleteUser(deleteId);
+        Console.WriteLine($"\n\n\n Success: {success.Result} \n\n\n");
+
+        if(success.Result){
+            deleteFeedback = "successful";
+        }else
+        {
+            deleteFeedback = "not successful";
+        }
+    }
+
+    public void HandleReadingError()
+    {
+        toggleRead = !toggleRead;
     }
 }
