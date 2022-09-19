@@ -3,7 +3,6 @@
 @using UserAPIBlazorFrontendTest.Models
 @inject IUserService iUserService;
 
-
 <PageTitle>User Data</PageTitle>
 
 <h1>User Data</h1>
@@ -44,7 +43,7 @@
         {
             <label class="ErrorLabel" for="IdInput">User was not found</label>
         }
-        <button name="ConfirmButton" @onclick=ReadUser>Confirm</button>
+        <button name="ConfirmButton" @onclick="(() => ReadUser(inputId))">Confirm</button>
 
         @if(userToGet == null){
 
@@ -92,7 +91,7 @@
             <label class="ErrorLabel" for="DeleteId">User was not found</label>
         }
         <input name="DeleteId" @bind="deleteId" />
-        <button name="ConfirmButton" @onclick=DeleteUser>Remove User from Database</button>
+        <button name="ConfirmButton" @onclick="(() => {DeleteUser(); GetAllUsers();})">Remove User from Database</button>
         <label for="DeleteId">@deleteFeedback</label>
     </div>
 }
@@ -107,7 +106,7 @@
     private string? lastname;
     private string? username;
     private string? password;
-    private string? deleteFeedback;
+    private string? deleteFeedback = "";
     private bool toggleRead = false;
     private bool toggleDelete = false;
     public User NewUser = new User();
@@ -118,16 +117,23 @@
         userToGet = null;
     }
 
-    public async Task GetAllUsers(){
+    public async Task GetAllUsers()
+    {
+        Console.WriteLine($"\n\n\n Getting All Users \n\n\n");
         userList = await iUserService.GetAllUsers();
+        Console.WriteLine($"\n\n\n Gotten All Users \n\n\n");
+
     }
 
-    public async Task ReadUser()
+    public async Task<User> ReadUser(int id)
     {
         toggleRead = false;
-        userToGet = await iUserService.ReadUser(inputId);
+        userToGet = await iUserService.ReadUser(id);
+
         if (userToGet == null)
             HandleReadingError();
+
+        return userToGet;
     }
 
     public async void CreateUser()
@@ -140,17 +146,22 @@
         await iUserService.CreateUser(NewUser);
     }
 
-    public void DeleteUser()
+    public async void DeleteUser()
     {
-        Console.WriteLine($"\n\n\n Start \n\n\n");
-        var success = iUserService.DeleteUser(deleteId);
-        Console.WriteLine($"\n\n\n Success: {success.Result} \n\n\n");
+        var firstCount = userList.Count();
+        await iUserService.DeleteUser(deleteId);
+        var newList = await iUserService.GetAllUsers();
+        var secondCount = newList.Count();
 
-        if(success.Result){
-            deleteFeedback = "successful";
-        }else
+        Console.WriteLine($"\n\n\n First: {firstCount} \n Second: {secondCount}\n\n\n");
+
+        if (firstCount > secondCount)
         {
-            deleteFeedback = "not successful";
+            deleteFeedback = "User deleted successfully";
+        }
+        else
+        {
+            deleteFeedback = $"Could not find user with Id: {deleteId}";
         }
     }
 

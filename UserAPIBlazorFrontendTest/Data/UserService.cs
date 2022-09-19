@@ -34,7 +34,7 @@ namespace UserAPIBlazorFrontendTest.Data
 
         public async Task CreateUser(User user)
         {
-            Console.WriteLine($"\n\n\n\n\n This is the new User 1: {user.Username} \n\n\n\n\n\n");
+            Console.WriteLine($"\n\n\n\n\n This is the new User: {user.Username} \n\n\n\n\n\n");
 
             using var response = await httpClient.PostAsJsonAsync("https://localhost:7275/api/User/CreateUser/", user);
 
