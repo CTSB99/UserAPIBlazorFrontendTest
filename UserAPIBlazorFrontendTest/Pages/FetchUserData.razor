@@ -106,7 +106,7 @@
         <button name="NewUserButton" @onclick=Login>Login</button>
     </div>
     <div>
-    <button @onclick=GetAllUsersAuth>Get All Users Auth</button>
+    <button name="GetAuth" @onclick=GetAllUsersAuth>Get All Users Auth</button>
     @foreach (var User in userList2)
     {
         <ul>
@@ -124,8 +124,14 @@
             </li>
         </ul>
     }
-    </div>
+    @if (!toggleAuth)
+    {
 
+    }else
+    {
+        <label class="ErrorLabel" for="GetAuth">Not Autherized</label>
+    }
+    </div>
 }
 
 
@@ -143,6 +149,7 @@
     private string? password2;
     private string? deleteFeedback = "";
     private bool toggleRead = false;
+    private bool toggleAuth = false;
     private bool toggleDelete = false;
     public User NewUser = new User();
 
@@ -213,6 +220,14 @@
 
     public async Task GetAllUsersAuth()
     {
-        userList2 = await iUserService.GetAllUsersAuth();
+        try
+        {
+            userList2 = await iUserService.GetAllUsersAuth();
+            toggleAuth = false;
+        } catch (Exception e)
+        {
+            Console.WriteLine(e);
+            toggleAuth = true;
+        }
     }
 }

@@ -56,14 +56,17 @@ namespace UserAPIBlazorFrontendTest.Data
         {
             try
             {
-                httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                return await httpClient.GetFromJsonAsync<List<User>>("https://localhost:7275/api/User/GetAllUsersAuth");
+                using (HttpClient httpClient2 = new())
+                {
+                    httpClient2.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    return await httpClient2.GetFromJsonAsync<List<User>>("https://localhost:7275/api/User/GetAllUsersAuth");
+                }
             }
             catch (Exception e)
             {
-                return e;
+                throw e;
+                return null;
             }
-
         }
 
         public async Task<string> Login(string username, string password)
@@ -77,7 +80,6 @@ namespace UserAPIBlazorFrontendTest.Data
             {
                 return "Error: " + e.Message;
             }
-
         }
     }
 }
