@@ -13,6 +13,7 @@ namespace UserAPIBlazorFrontendTest.Data
     public class UserService : IUserService
     {
         private readonly HttpClient httpClient;
+        private string token;
         public UserService(HttpClient _httpClient)
         {
             httpClient = _httpClient;
@@ -53,15 +54,32 @@ namespace UserAPIBlazorFrontendTest.Data
 
         public async Task<List<User>> GetAllUsersAuth()
         {
-            return await httpClient.GetFromJsonAsync<List<User>>("https://localhost:7275/api/User/GetAllUsersAuth");
+            try
+            {
+                httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                return await httpClient.GetFromJsonAsync<List<User>>("https://localhost:7275/api/User/GetAllUsersAuth");
+            }
+            catch (Exception e)
+            {
+                return e;
+            }
+
         }
 
         public async Task<string> Login(string username, string password)
         {
-            Console.WriteLine($"\n\n\n This is the username: \n {username} \n This is the password: \n {password} \n\n\n");
-            var token = await httpClient.GetStringAsync($"https://localhost:7275/api/User/login?username={username}&password={password}");
-            Console.WriteLine($"\n\n\n This is the 1st token: \n {token} \n\n\n");
-            return token;
+            try
+            {
+                token = await httpClient.GetStringAsync($"https://localhost:7275/api/User/login?username={username}&password={password}");
+                return token;
+            }
+            catch (Exception e)
+            {
+                return "Error: " + e.Message;
+            }
+
         }
     }
 }
+
+// session storage

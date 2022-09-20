@@ -207,9 +207,7 @@
 
     public async Task<string> Login()
     {
-        Console.WriteLine("lol");
         string token = await iUserService.Login(username2, password2);
-        Console.WriteLine($"\n\n\n This is the 2nd token: \n {token} \n\n\n");
         return token;
     }
 
