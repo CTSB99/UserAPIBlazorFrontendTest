@@ -9,5 +9,7 @@ namespace UserAPIBlazorFrontendTest.Data
         Task<User> ReadUser(int input);
         Task CreateUser(User user);
         Task<bool> DeleteUser(int id);
+        Task<List<User>> GetAllUsersAuth();
+        Task<string> Login(string username, string password);
     }
 }

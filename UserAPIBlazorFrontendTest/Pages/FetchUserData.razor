@@ -94,11 +94,44 @@
         <button name="ConfirmButton" @onclick="(() => {DeleteUser(); GetAllUsers();})">Remove User from Database</button>
         <label for="DeleteId">@deleteFeedback</label>
     </div>
+
+    <div>
+        <form>
+            <label for="usernameInput">User Name: </label>
+            <input name="usernameInput" @bind="username2">
+
+            <label for="passwordInput">Password : </label>
+            <input name="passwordInput" @bind="password2">
+        </form>
+        <button name="NewUserButton" @onclick=Login>Login</button>
+    </div>
+    <div>
+    <button @onclick=GetAllUsersAuth>Get All Users Auth</button>
+    @foreach (var User in userList2)
+    {
+        <ul>
+            <li>
+                User Id: @User.Id
+            </li>
+            <li>
+                First Name: @User.Firstname
+            </li>
+            <li>
+                Last Name: @User.Lastname
+            </li>
+            <li>
+                User Name @User.Username
+            </li>
+        </ul>
+    }
+    </div>
+
 }
 
 
 @code {
     private List<User> userList = new List<User>();
+    private List<User> userList2 = new List<User>();
     private User userToGet = new User();
     private int inputId;
     private int deleteId;
@@ -106,6 +139,8 @@
     private string? lastname;
     private string? username;
     private string? password;
+    private string? username2;
+    private string? password2;
     private string? deleteFeedback = "";
     private bool toggleRead = false;
     private bool toggleDelete = false;
@@ -168,5 +203,18 @@
     public void HandleReadingError()
     {
         toggleRead = !toggleRead;
+    }
+
+    public async Task<string> Login()
+    {
+        Console.WriteLine("lol");
+        string token = await iUserService.Login(username2, password2);
+        Console.WriteLine($"\n\n\n This is the 2nd token: \n {token} \n\n\n");
+        return token;
+    }
+
+    public async Task GetAllUsersAuth()
+    {
+        userList2 = await iUserService.GetAllUsersAuth();
     }
 }
