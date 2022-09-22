@@ -83,5 +83,3 @@ namespace UserAPIBlazorFrontendTest.Data
         }
     }
 }
-
-// session storage
